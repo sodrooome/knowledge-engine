@@ -35,6 +35,10 @@ function main(): void {
   }
 
   console.log(`knowledge-engine started (${config.nodeEnv})`);
+  console.log(
+    `Embeddings: ${config.embedding.model} @ ${config.embedding.baseUrl}`,
+  );
+  console.log(`Vector store: ${config.lanceDb.path}`);
 }
 
 // Start the application only when this file is executed directly.

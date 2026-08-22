@@ -10,6 +10,7 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "start": "node dist/main.js",
+    "smoke": "tsc && node --env-file=.env dist/smoke.js",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
