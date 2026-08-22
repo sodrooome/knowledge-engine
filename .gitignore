@@ -7,6 +7,9 @@ dist/
 # Environment variables
 .env
 
+# Local vector store data (LanceDB)
+data/
+
 # Logs
 *.log
 npm-debug.log*
