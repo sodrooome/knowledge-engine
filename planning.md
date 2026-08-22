@@ -115,3 +115,34 @@ with features such as:
 ## Design Question
 
 Eventually i have been reading a blog post and article about building RAG with obsidian as part of second brain and remembering process. Currently, at my daily basis when working towards UI automation testing, i have setup opencode with several toolkit such as serena alongside RTK for token compression and oh my agent which is used to delegate agent when perform a task. Whenever there’s a new information or insights during development and testing, usually i always put and onboard a new memories and provide them to the skills.md (has a different files) and agents.md Is it possible to do the same thing with my obsidian? Like, for an example: i learned about something new like “meaning of oxymoron” or “food recipe” or some gotchas and tricks, and then i wrote that on my obsidian, and perhaps RAG or hermes or whatsoever will do that thing? By curated and analyze and perhaps it would be useful later?
+
+## Decision log
+
+### Embeddings via OpenRouter (Part 3)
+
+Embeddings go through OpenRouter's OpenAI-compatible `/api/v1/embeddings` endpoint with the default model `google/gemini-embedding-001` at its native 3072 dimensions.
+
+**Known caveat:** OpenRouter's OpenAI-compatible surface cannot pass Gemini's `taskType` (`RETRIEVAL_DOCUMENT` vs `RETRIEVAL_QUERY`). Google guidance suggests this can reduce retrieval quality by an estimated 10–30%.
+
+**Plan:** If real-world retrieval quality disappoints, revisit with a native `GeminiEmbedding` adapter that speaks the Gemini REST API directly and honors `taskType`. For now, the OpenRouter adapter keeps the implementation minimal and provider-agnostic.
+
+### LanceDB pinned to 0.22.3 (Intel Mac)
+
+This machine is Intel (`darwin-x64`). LanceDB stopped shipping Intel macOS binaries after 0.22.x — `@lancedb/lancedb@0.23.0` still *declares* `@lancedb/lancedb-darwin-x64` in its optionalDependencies but the tarball was never published (404), and newer versions dropped it entirely. npm silently skips missing optional deps, which surfaces as "Cannot find native binding".
+
+**Consequence:** `@lancedb/lancedb` is pinned at `0.22.3` (last version with a real darwin-x64 binary). `apache-arrow ^18.1.0` is within its peer range (`>=15 <=18.1`). Bump back to latest LanceDB when moving to Apple Silicon or Linux — no code changes expected, only core APIs are used.
+
+### Table columns are snake_case
+
+Lance's SQL predicate parser (DataFusion) normalizes unquoted identifiers to lowercase, so camelCase columns break `delete()`/`where()` expressions ("No field named documentid"). Storage schema uses `document_id`, `source_path`, etc.; TypeScript types stay camelCase and map in `toRecord`/`rowToChunk`.
+
+### Per-model vector tables (free model switching)
+
+Embedding models are not interoperable — different widths and distance scales make cross-model search meaningless, so a single shared table forces a destructive reset on every `EMBEDDING_MODEL` change. Instead, each model owns a separate table inside the same LanceDB directory, named `chunks_<sanitized-model>_<hash-of-model:dims>` via `chunkTableName()`.
+
+Consequences:
+
+- Switching `EMBEDDING_MODEL` in `.env` is non-destructive and instant: the old index survives, so A/B comparisons can flip back and forth freely.
+- Each table only reflects what was indexed while its model was active — once Part 5 (indexer) lands, switching models means re-indexing the vault into that model's table.
+- Stale tables accumulate harmlessly; delete their `.lance` directories under `LANCEDB_PATH` to reclaim space.
+- The dimension-mismatch guard remains as a safety net for tables created before this change (e.g. a legacy fixed `chunks` table).

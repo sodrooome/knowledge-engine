@@ -79,6 +79,13 @@ knowledge-engine/
 │   │   ├── MarkdownParser.ts   # ATX heading-aware parser
 │   │   ├── Chunker.ts         # Section chunking with overlap
 │   │   └── index.ts
+│   ├── embedding/        # Embedding providers
+│   │   ├── EmbeddingProvider.ts   # Core provider interface
+│   │   ├── OpenAICompatibleEmbedding.ts  # OpenRouter-compatible adapter
+│   │   └── index.ts
+│   ├── store/            # Vector store adapters
+│   │   ├── LanceDBVectorStore.ts  # LanceDB chunk storage + search
+│   │   └── index.ts
 │   ├── utils/            # Shared utilities
 │   │   ├── hash.ts       # SHA-256 content hashing
 │   │   ├── frontmatter.ts     # YAML frontmatter extraction
@@ -112,6 +119,33 @@ npm start
 | `make start` | Run compiled output |
 | `make test` | Run vitest suite |
 | `make test-watch` | Vitest in watch mode |
+| `npm run smoke` | End-to-end check: embed sample texts via OpenRouter, store in LanceDB, run a semantic query |
+
+## Platform notes
+
+> [!WARNING]
+> **Intel Mac (`darwin-x64`) users:** this repo pins `@lancedb/lancedb` to **0.22.3**, the last release that ships a native binary for Intel macOS. LanceDB stopped publishing `darwin-x64` builds after 0.22.x — newer versions either omit them entirely or declare the optional package without ever publishing the tarball, and npm silently skips missing optional dependencies.
+>
+> The symptom of upgrading on an Intel machine is `Error: Cannot find native binding ... @lancedb/lancedb-darwin-x64`.
+
+> [!TIP]
+> On Apple Silicon or Linux you can move back to the latest LanceDB (`npm install @lancedb/lancedb@latest`); only stable core APIs are used, so no code changes are expected.
+>
+> After changing dependency pins, delete `node_modules` and `package-lock.json` before reinstalling — stale lockfiles keep resolving without the platform binary.
+
+## Embeddings via OpenRouter
+
+Embeddings go through OpenRouter's OpenAI-compatible `/api/v1/embeddings` endpoint, so one API key covers both chat and embedding models. Default model is `google/gemini-embedding-001` at its native 3072 dimensions (~$0.15/M tokens).
+
+> [!TIP]
+> Switching `EMBEDDING_MODEL` is non-destructive: every model gets its own table (`chunks_<model-slug>_<hash>`), so indexes coexist on disk and you can flip between models freely for A/B comparisons — no deleting required.
+
+> [!CAUTION]
+> OpenRouter's OpenAI-shaped surface cannot pass Gemini's `taskType` parameter (`RETRIEVAL_DOCUMENT` for indexed chunks vs `RETRIEVAL_QUERY` for search queries). Google's guidance estimates a 10–30% retrieval-quality impact from the mismatch.
+>
+> If real-world retrieval quality disappoints, the planned fallback is a native Gemini adapter speaking directly to `generativelanguage.googleapis.com`; the `EmbeddingProvider` interface already carries the `task` argument so no callers would change.
+
+Full reasoning lives in `planning.md` under *Decision log*.
 
 ## Configuration
 
@@ -121,7 +155,14 @@ Copy `.env.example` to `.env`:
 cp .env.example .env
 ```
 
-Currently requires `NODE_ENV` (`development`, `production`, or `test`). More fields are added as each part is implemented.
+Currently requires `NODE_ENV` (`development`, `production`, or `test`).
+
+Additional environment variables:
+
+- `EMBEDDING_API_KEY` — required. API key for the embedding provider (e.g. OpenRouter).
+- `EMBEDDING_BASE_URL` — optional. Defaults to `https://openrouter.ai/api/v1`.
+- `EMBEDDING_MODEL` — optional. Defaults to `google/gemini-embedding-001`.
+- `LANCEDB_PATH` — required. Local directory where LanceDB stores its data.
 
 ## Status
 
@@ -129,8 +170,8 @@ Currently requires `NODE_ENV` (`development`, `production`, or `test`). More fie
 |---|---|---|
 | 1 | Project setup (TypeScript, Node, config) | Done |
 | 2 | Markdown parser and chunker | Done |
-| 3 | Embedding providers (OpenAI, Ollama, Gemini) | Planned |
-| 4 | LanceDB integration | Planned |
+| 3 | Embedding providers (OpenAI, Ollama, Gemini) | Done (OpenRouter-compatible) |
+| 4 | LanceDB integration | Done |
 | 5 | Indexer pipeline | Planned |
 | 6 | File watcher | Planned |
 | 7 | Retriever | Planned |
