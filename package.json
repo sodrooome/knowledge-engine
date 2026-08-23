@@ -11,6 +11,8 @@
     "dev": "tsc --watch",
     "start": "node dist/main.js",
     "smoke": "tsc && node --env-file=.env dist/smoke.js",
+    "index": "tsc && node --env-file=.env dist/index-cli.js",
+    "query": "tsc && node --env-file=.env dist/query-cli.js",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
