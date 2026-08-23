@@ -1,6 +1,8 @@
 # knowledge-engine
 
-Semantic search over your Obsidian vault — a **Minimum Viable Second Brain** for you and your AI agents.
+<img src="assets/knowledge-engine.png" width="600" alt="knowledge-engine: semantic search for your second brain" />
+
+Semantic search over your Obsidian vault, a **Minimum Viable Second Brain** for you and your AI agents.
 
 ## Why
 
@@ -20,17 +22,17 @@ The initial idea came from reading blog posts and articles about building RAG sy
 
 ## Philosophy
 
-Personally, the trap of personal knowledge systems is chasing the *"perfect second brain"* by implementing GraphRAG, Neo4j, five Obsidian plugins, autonomous agents and such. And i felt like, i was going to spend more time maintaining the system rather than learning.
+Personally, the trap of personal knowledge systems is chasing the _"perfect second brain"_ by implementing GraphRAG, Neo4j, five Obsidian plugins, autonomous agents and such. And i felt like, i was going to spend more time maintaining the system rather than learning.
 
 When I begun this project, it takes the opposite approach: a **Minimum Viable Second Brain (MVSB)** . Start with the core loop that delivers value, then expand only when the foundation proves useful.
 
-| Step | Purpose | Don't optimize yet |
-|---|---|---|
-| Embeddings + Vector DB | Semantic memory | Which embedding model is "best" |
-| Indexer | Keeps the knowledge base updated | Fancy chunking strategies |
-| Connect to Opencode | Makes notes usable by AI | Multi-agent orchestration |
-| Ask real questions | Validates usefulness | Benchmark scores |
-| Curator features | Gradually improves note quality | Full automation |
+| Step                   | Purpose                          | Don't optimize yet              |
+| ---------------------- | -------------------------------- | ------------------------------- |
+| Embeddings + Vector DB | Semantic memory                  | Which embedding model is "best" |
+| Indexer                | Keeps the knowledge base updated | Fancy chunking strategies       |
+| Connect to Opencode    | Makes notes usable by AI         | Multi-agent orchestration       |
+| Ask real questions     | Validates usefulness             | Benchmark scores                |
+| Curator features       | Gradually improves note quality  | Full automation                 |
 
 ## Architecture
 
@@ -60,6 +62,7 @@ When I begun this project, it takes the opposite approach: a **Minimum Viable Se
 ```
 
 The system has two retrieval paths:
+
 1. **Embedding DB** (left), semantic search: find notes by meaning, not keywords.
 2. **Knowledge Graph** (right), optional future: traverse relationships between notes.
 
@@ -70,30 +73,30 @@ For the MVSB phase, I tend to focus on the left path (embeddings + vector search
 ```
 knowledge-engine/
 ├── src/
-│   ├── config/           # Environment-based configuration
+│   ├── config/                             # Environment-based configuration
 │   │   └── config.ts
-│   ├── types/            # Shared type definitions
-│   │   ├── Chunk.ts      # Embeddable chunk with metadata
-│   │   └── IndexedDocument.ts  # Parsed document / section types
-│   ├── parser/           # Markdown parsing and chunking
-│   │   ├── MarkdownParser.ts   # ATX heading-aware parser
-│   │   ├── Chunker.ts         # Section chunking with overlap
+│   ├── types/                              # Shared type definitions
+│   │   ├── Chunk.ts                        # Embeddable chunk with metadata
+│   │   └── IndexedDocument.ts              # Parsed document / section types
+│   ├── parser/                             # Markdown parsing and chunking
+│   │   ├── MarkdownParser.ts               # ATX heading-aware parser
+│   │   ├── Chunker.ts                      # Section chunking with overlap
 │   │   └── index.ts
-│   ├── embedding/        # Embedding providers
-│   │   ├── EmbeddingProvider.ts   # Core provider interface
-│   │   ├── OpenAICompatibleEmbedding.ts  # OpenRouter-compatible adapter
+│   ├── embedding/                          # Embedding providers
+│   │   ├── EmbeddingProvider.ts            # Core provider interface
+│   │   ├── OpenAICompatibleEmbedding.ts    # OpenRouter-compatible adapter
 │   │   └── index.ts
-│   ├── store/            # Vector store adapters
-│   │   ├── LanceDBVectorStore.ts  # LanceDB chunk storage + search
+│   ├── store/                              # Vector store adapters
+│   │   ├── LanceDBVectorStore.ts           # LanceDB chunk storage + search
 │   │   └── index.ts
-│   ├── utils/            # Shared utilities
-│   │   ├── hash.ts       # SHA-256 content hashing
-│   │   ├── frontmatter.ts     # YAML frontmatter extraction
+│   ├── utils/                              # Shared utilities
+│   │   ├── hash.ts                         # SHA-256 content hashing
+│   │   ├── frontmatter.ts                  # YAML frontmatter extraction
 │   │   └── index.ts
-│   └── main.ts           # Application entry point
-├── tests/                # Manual tests
-├── planning.md           # Full roadmap and design decisions
-├── Makefile              # Common developer commands
+│   └── main.ts                             # Application entry point
+├── tests/                                  # Manual tests
+├── planning.md                             # Full roadmap and design decisions
+├── Makefile                                # Common developer commands
 ├── package.json
 └── tsconfig.json
 ```
@@ -111,17 +114,17 @@ npm run build
 npm start
 ```
 
-| Command | What it does |
-|---|---|
-| `make help` | List all targets |
-| `make build` | Compile TypeScript |
-| `make typecheck` | `tsc --noEmit` |
-| `make start` | Run compiled output |
-| `make test` | Run vitest suite |
-| `make test-watch` | Vitest in watch mode |
-| `npm run smoke` | End-to-end check: embed sample texts via OpenRouter, store in LanceDB, run a semantic query |
-| `npm run index -- <vaultPath>` | Bulk-index a folder of markdown notes into the vector store (idempotent re-runs) |
-| `npm run query -- "<question>" [k]` | Semantic search over indexed notes; prints citations with distance, path, headings, lines |
+| Command                             | What it does                                                                                |
+| ----------------------------------- | ------------------------------------------------------------------------------------------- |
+| `make help`                         | List all targets                                                                            |
+| `make build`                        | Compile TypeScript                                                                          |
+| `make typecheck`                    | `tsc --noEmit`                                                                              |
+| `make start`                        | Run compiled output                                                                         |
+| `make test`                         | Run vitest suite                                                                            |
+| `make test-watch`                   | Vitest in watch mode                                                                        |
+| `npm run smoke`                     | End-to-end check: embed sample texts via OpenRouter, store in LanceDB, run a semantic query |
+| `npm run index -- <vaultPath>`      | Bulk-index a folder of markdown notes into the vector store (idempotent re-runs)            |
+| `npm run query -- "<question>" [k]` | Semantic search over indexed notes; prints citations with distance, path, headings, lines   |
 
 ## Testing with your own vault
 
@@ -131,34 +134,34 @@ npm run query -- "what do I know about eventual consistency?" 5
 ```
 
 Re-running `index` replaces each note's chunks, so edits propagate cleanly.
-The bulk indexer is the skeleton of Part 5 — incremental skip-unchanged logic
-lands later (see `planning.md`, *Decision log*).
+The bulk indexer is the skeleton of Part 5; incremental skip-unchanged logic
+lands later (see `planning.md`, _Decision log_).
 
 ## Platform notes
 
 > [!WARNING]
-> **Intel Mac (`darwin-x64`) users:** this repo pins `@lancedb/lancedb` to **0.22.3**, the last release that ships a native binary for Intel macOS. LanceDB stopped publishing `darwin-x64` builds after 0.22.x — newer versions either omit them entirely or declare the optional package without ever publishing the tarball, and npm silently skips missing optional dependencies.
+> **Intel Mac (`darwin-x64`) users:** this repo pins `@lancedb/lancedb` to **0.22.3**, the last release that ships a native binary for Intel macOS. LanceDB stopped publishing `darwin-x64` builds after 0.22.x; newer versions either omit them entirely or declare the optional package without ever publishing the tarball, and npm silently skips missing optional dependencies.
 >
 > The symptom of upgrading on an Intel machine is `Error: Cannot find native binding ... @lancedb/lancedb-darwin-x64`.
 
 > [!TIP]
 > On Apple Silicon or Linux you can move back to the latest LanceDB (`npm install @lancedb/lancedb@latest`); only stable core APIs are used, so no code changes are expected.
 >
-> After changing dependency pins, delete `node_modules` and `package-lock.json` before reinstalling — stale lockfiles keep resolving without the platform binary.
+> After changing dependency pins, delete `node_modules` and `package-lock.json` before reinstalling; stale lockfiles keep resolving without the platform binary.
 
 ## Embeddings via OpenRouter
 
 Embeddings go through OpenRouter's OpenAI-compatible `/api/v1/embeddings` endpoint, so one API key covers both chat and embedding models. Default model is `google/gemini-embedding-001` at its native 3072 dimensions (~$0.15/M tokens).
 
 > [!TIP]
-> Switching `EMBEDDING_MODEL` is non-destructive: every model gets its own table (`chunks_<model-slug>_<hash>`), so indexes coexist on disk and you can flip between models freely for A/B comparisons — no deleting required.
+> Switching `EMBEDDING_MODEL` is non-destructive: every model gets its own table (`chunks_<model-slug>_<hash>`), so indexes coexist on disk and you can flip between models freely for A/B comparisons; no deleting required.
 
 > [!CAUTION]
 > OpenRouter's OpenAI-shaped surface cannot pass Gemini's `taskType` parameter (`RETRIEVAL_DOCUMENT` for indexed chunks vs `RETRIEVAL_QUERY` for search queries). Google's guidance estimates a 10–30% retrieval-quality impact from the mismatch.
 >
 > If real-world retrieval quality disappoints, the planned fallback is a native Gemini adapter speaking directly to `generativelanguage.googleapis.com`; the `EmbeddingProvider` interface already carries the `task` argument so no callers would change.
 
-Full reasoning lives in `planning.md` under *Decision log*.
+Full reasoning lives in `planning.md` under _Decision log_.
 
 ## Configuration
 
@@ -172,23 +175,23 @@ Currently requires `NODE_ENV` (`development`, `production`, or `test`).
 
 Additional environment variables:
 
-- `EMBEDDING_API_KEY` — required. API key for the embedding provider (e.g. OpenRouter).
-- `EMBEDDING_BASE_URL` — optional. Defaults to `https://openrouter.ai/api/v1`.
-- `EMBEDDING_MODEL` — optional. Defaults to `google/gemini-embedding-001`.
-- `LANCEDB_PATH` — required. Local directory where LanceDB stores its data.
+- `EMBEDDING_API_KEY`: required. API key for the embedding provider (e.g. OpenRouter).
+- `EMBEDDING_BASE_URL`: optional. Defaults to `https://openrouter.ai/api/v1`.
+- `EMBEDDING_MODEL`: optional. Defaults to `google/gemini-embedding-001`.
+- `LANCEDB_PATH`: required. Local directory where LanceDB stores its data.
 
 ## Status
 
-| Part | Component | Status |
-|---|---|---|
-| 1 | Project setup (TypeScript, Node, config) | Done |
-| 2 | Markdown parser and chunker | Done |
-| 3 | Embedding providers (OpenAI, Ollama, Gemini) | Done (OpenRouter-compatible) |
-| 4 | LanceDB integration | Done |
-| 5 | Indexer pipeline | Planned |
-| 6 | File watcher | Planned |
-| 7 | Retriever | Planned |
-| 8 | Opencode integration | Planned |
+| Part | Component                                    | Status                       |
+| ---- | -------------------------------------------- | ---------------------------- |
+| 1    | Project setup (TypeScript, Node, config)     | Done                         |
+| 2    | Markdown parser and chunker                  | Done                         |
+| 3    | Embedding providers (OpenAI, Ollama, Gemini) | Done (OpenRouter-compatible) |
+| 4    | LanceDB integration                          | Done                         |
+| 5    | Indexer pipeline                             | Planned                      |
+| 6    | File watcher                                 | Planned                      |
+| 7    | Retriever                                    | Planned                      |
+| 8    | Opencode integration                         | Planned                      |
 
 ## Design principles
 
@@ -201,10 +204,10 @@ Additional environment variables:
 
 This project is a hybrid of human and AI work:
 
-| Layer | Author | Details |
-|---|---|---|
-| Idea & architecture | Myself | Initial concept, research, and high-level design after reading research paper, blog posts and articles about RAG + personal knowledge systems |
-| Implementation | AI-assisted | Code written collaboratively using Opencode (with access to multiple LLM providers: Claude, Gemini, DeepSeek, etc) The human reviews every change before merging |
-| Tests | Myself | Unit and integration tests are written manually. AI-assisted test generation may be used in the future only when explicitly requested |
+| Layer               | Author      | Details                                                                                                                                                          |
+| ------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Idea & architecture | Myself      | Initial concept, research, and high-level design after reading research paper, blog posts and articles about RAG + personal knowledge systems                    |
+| Implementation      | AI-assisted | Code written collaboratively using Opencode (with access to multiple LLM providers: Claude, Gemini, DeepSeek, etc) The human reviews every change before merging |
+| Tests               | Myself      | Unit and integration tests are written manually. AI-assisted test generation may be used in the future only when explicitly requested                            |
 
 I drives the direction, the AI handles implementation under review. No code is merged without manual inspection.
