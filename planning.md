@@ -146,3 +146,7 @@ Consequences:
 - Each table only reflects what was indexed while its model was active — once Part 5 (indexer) lands, switching models means re-indexing the vault into that model's table.
 - Stale tables accumulate harmlessly; delete their `.lance` directories under `LANCEDB_PATH` to reclaim space.
 - The dimension-mismatch guard remains as a safety net for tables created before this change (e.g. a legacy fixed `chunks` table).
+
+### Bulk indexer CLI (Part 5 skeleton)
+
+`npm run index -- <vaultPath>` walks markdown notes (skipping dotfolders), parses, chunks, embeds (`document` task), and replaces each note's rows via delete-by-document + add — idempotent re-runs. `npm run query -- "<q>" [k]` embeds with the asymmetric `query` task and prints citations. Deliberately deferred from Part 5 proper: contentHash skip-unchanged, deleted-file pruning, resume/checkpointing. Note: smoke rows and vault rows share one per-model table; wipe `data/lancedb` before first real indexing if the sample rows are unwanted.

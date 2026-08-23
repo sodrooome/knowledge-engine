@@ -120,6 +120,19 @@ npm start
 | `make test` | Run vitest suite |
 | `make test-watch` | Vitest in watch mode |
 | `npm run smoke` | End-to-end check: embed sample texts via OpenRouter, store in LanceDB, run a semantic query |
+| `npm run index -- <vaultPath>` | Bulk-index a folder of markdown notes into the vector store (idempotent re-runs) |
+| `npm run query -- "<question>" [k]` | Semantic search over indexed notes; prints citations with distance, path, headings, lines |
+
+## Testing with your own vault
+
+```bash
+npm run index -- ~/path/to/vault    # skips dotfolders (.obsidian, .trash)
+npm run query -- "what do I know about eventual consistency?" 5
+```
+
+Re-running `index` replaces each note's chunks, so edits propagate cleanly.
+The bulk indexer is the skeleton of Part 5 — incremental skip-unchanged logic
+lands later (see `planning.md`, *Decision log*).
 
 ## Platform notes
 
