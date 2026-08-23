@@ -6,9 +6,9 @@ Since you already have Obsidian and access to multiple LLMs through Opencode, I'
 - Write a small indexer (Python or Node.js) that watches your Obsidian vault, chunks Markdown files, generates embeddings, and stores them.
 - Connect that index to Opencode so one of your agents can retrieve relevant notes before answering.
 - Test with real questions you couldn't answer with simple keyword search, such as:
-    - "When have I written about eventual consistency?"
-    - "What books have influenced my thinking on inequality?"
-    - "Show me every note where I compared software engineering with economics."
+  - "When have I written about eventual consistency?"
+  - "What books have influenced my thinking on inequality?"
+  - "Show me every note where I compared software engineering with economics."
 - Only after retrieval feels useful, start adding curation features like automatic backlinks, duplicate detection, or weekly "knowledge review" reports.
 
 The reason I'd recommend this order is that it gives you something valuable almost immediately—a semantic search layer over your own knowledge. Everything else, from curator agents to GraphRAG, builds naturally on top of that foundation. Given your experience building testing frameworks and AI-assisted development workflows, I think you'll enjoy treating this as another engineering project: a personal knowledge system whose users happen to be both you and your AI assistants.
@@ -19,12 +19,13 @@ The five steps you highlighted are enough to build a **Minimum Viable Second Bra
 
 Here's what each step gives you:
 
-Step	Purpose	Don't optimize yet
-1. Embeddings + Vector DB	Semantic memory	Which embedding model is "best"
-2. Indexer	Keeps the knowledge base updated	Fancy chunking strategies
-3. Connect to Opencode	Makes your notes usable by AI	Multi-agent orchestration
-4. Ask real questions	Validates usefulness	Benchmark scores or retrieval metrics
-5. Curator features	Gradually improves note quality	Full automation
+Step Purpose Don't optimize yet
+
+1. Embeddings + Vector DB Semantic memory Which embedding model is "best"
+2. Indexer Keeps the knowledge base updated Fancy chunking strategies
+3. Connect to Opencode Makes your notes usable by AI Multi-agent orchestration
+4. Ask real questions Validates usefulness Benchmark scores or retrieval metrics
+5. Curator features Gradually improves note quality Full automation
 
 ## Suggestion
 
@@ -114,7 +115,9 @@ with features such as:
 
 ## Design Question
 
-Eventually i have been reading a blog post and article about building RAG with obsidian as part of second brain and remembering process. Currently, at my daily basis when working towards UI automation testing, i have setup opencode with several toolkit such as serena alongside RTK for token compression and oh my agent which is used to delegate agent when perform a task. Whenever there’s a new information or insights during development and testing, usually i always put and onboard a new memories and provide them to the skills.md (has a different files) and agents.md Is it possible to do the same thing with my obsidian? Like, for an example: i learned about something new like “meaning of oxymoron” or “food recipe” or some gotchas and tricks, and then i wrote that on my obsidian, and perhaps RAG or hermes or whatsoever will do that thing? By curated and analyze and perhaps it would be useful later?
+Eventually, I have been reading a blog post and an article about building RAG with Obsidian as part of a second brain and remembering process. Currently, daily, when working towards UI automation testing, I have set up opencode with several toolkits such as Serena alongside RTK for token compression and Oh My Agent, which is used to delegate to an agent when performing a task.
+
+Whenever there’s a new information or insights during development and testing, usually i always put and onboard a new memories and provide them to the skills.md (has different files) and agents.md Is it possible to do the same thing with my Obsidian? Like, for an example: I learned about something new, like the “meaning of oxymoron” or a “food recipe” or some gotchas and tricks, and then I wrote that in my Obsidian, and perhaps RAG or Hermes or whatsoever will do that thing? By curating and analyzing, perhaps it would be useful later?
 
 ## Decision log
 
@@ -128,7 +131,7 @@ Embeddings go through OpenRouter's OpenAI-compatible `/api/v1/embeddings` endpoi
 
 ### LanceDB pinned to 0.22.3 (Intel Mac)
 
-This machine is Intel (`darwin-x64`). LanceDB stopped shipping Intel macOS binaries after 0.22.x — `@lancedb/lancedb@0.23.0` still *declares* `@lancedb/lancedb-darwin-x64` in its optionalDependencies but the tarball was never published (404), and newer versions dropped it entirely. npm silently skips missing optional deps, which surfaces as "Cannot find native binding".
+This machine is Intel (`darwin-x64`). LanceDB stopped shipping Intel macOS binaries after 0.22.x — `@lancedb/lancedb@0.23.0` still _declares_ `@lancedb/lancedb-darwin-x64` in its optionalDependencies but the tarball was never published (404), and newer versions dropped it entirely. npm silently skips missing optional deps, which surfaces as "Cannot find native binding".
 
 **Consequence:** `@lancedb/lancedb` is pinned at `0.22.3` (last version with a real darwin-x64 binary). `apache-arrow ^18.1.0` is within its peer range (`>=15 <=18.1`). Bump back to latest LanceDB when moving to Apple Silicon or Linux — no code changes expected, only core APIs are used.
 
