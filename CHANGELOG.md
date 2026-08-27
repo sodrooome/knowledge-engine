@@ -9,8 +9,21 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 - Incremental indexing — skip unchanged notes on re-run (bulk indexer is the skeleton; see `planning.md`, _Decision log_)
 - File watcher — re-index notes as they change in the vault
-- Opencode integration — expose retrieval to agents as a tool
+- Indexing through MCP — expose an `index_vault` tool so agents can keep the index fresh
 - Native Gemini embedding adapter fallback (`RETRIEVAL_DOCUMENT` vs `RETRIEVAL_QUERY` task types) if OpenRouter's OpenAI-shaped surface disappoints on retrieval quality
+
+## [0.1.1] - 2026-08-27
+
+Opencode integration, search-only: the retriever is now available to agents as a first-class MCP tool.
+
+### Added
+
+- Opencode MCP server (`src/mcp-server.ts`) exposing `search_vault(query, k)` — embeds with the asymmetric `query` task, runs cosine top-K (default 5, max 20), and returns ranked citations with the full chunk text so agents can ground answers in your notes
+- Lazy cached RAG runtime — the embedding dimension probe and LanceDB table open happen once per server process, not per query
+- Project-scoped MCP registration in `opencode.json`; setup documented for both project and global scope in the README
+- Demo screencast (`assets/demo-screencast.mp4`) embedded in the README and the docs Opencode page
+- Docs site deployment via GitHub Pages — a workflow assembles `docs/` and `assets/` into a static site and deploys it to Pages
+- Dedicated Opencode integration guide (`docs/opencode.html`) covering clone-based setup and MCP registration
 
 ## [0.1.0] - 2026-08-23
 

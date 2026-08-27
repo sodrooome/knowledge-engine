@@ -157,13 +157,18 @@
   }
   .chip:hover{background:var(--tint-2);color:var(--purple-deep);}
 
-  .hero-actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center;}
+  .install{margin:0 0 28px;}
+  .install-note{
+    font-family:var(--mono);font-size:13px;color:var(--ink-muted);
+    margin:0 0 10px;
+  }
   .install-code{
     font-family:var(--mono);font-size:14px;
     background:var(--surface);border:1px solid var(--border);border-radius:8px;
-    padding:11px 16px;color:var(--purple-deep);
+    padding:14px 16px;color:var(--purple-deep);
   }
-  .install-code .dim{color:var(--ink-faint);}
+  .install-code>div{display:flex;gap:8px;padding:2px 0;}
+  .install-code .dim{color:var(--ink-faint);flex:none;}
 
   /* ---------- sections ---------- */
   section{padding:64px 0;border-top:1px solid var(--border);}
@@ -224,9 +229,11 @@
   .status-dot{width:9px;height:9px;border-radius:50%;flex:none;}
   .status-row.done .status-dot{background:var(--teal-bright);}
   .status-row.planned .status-dot{background:transparent;border:1.5px solid var(--ink-faint);}
+  .status-row.partial .status-dot{background:var(--purple);}
   .status-row .label{font-size:14.5px;flex:1;}
   .status-row .state{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.04em;}
   .status-row.done .state{color:var(--teal);}
+  .status-row.partial .state{color:var(--purple);}
 
   /* footer */
   footer{padding:44px 0 60px;border-top:1px solid var(--border);}
@@ -279,7 +286,6 @@
     .gap-col{padding:20px 18px;}
     .pipe-stage{flex:1 0 138px;padding:14px 12px;}
     .gap-grid{border-radius:10px;}
-    .hero-actions{gap:10px;}
     .install-code{font-size:12.5px;padding:9px 13px;}
     footer{padding:36px 0 48px;}
   }
@@ -323,6 +329,7 @@
     <nav>
       <a href="#how">How it works</a>
       <a href="#start">Quick start</a>
+      <a href="opencode.html">Opencode</a>
       <a href="#status">Status</a>
       <a href="changelog.html">Changelog</a>
       <a href="support.html">Support</a>
@@ -378,8 +385,13 @@
         </div>
       </div>
 
-      <div class="hero-actions">
-        <div class="install-code"><span class="dim">$</span> npm install &amp;&amp; npm run index -- ~/vault</div>
+      <div class="install">
+        <p class="install-note">At the moment, the only way to install is to clone the repository:</p>
+        <div class="install-code">
+          <div><span class="dim">$</span> git clone https://github.com/sodrooome/knowledge-engine</div>
+          <div><span class="dim">$</span> cd knowledge-engine</div>
+          <div><span class="dim">$</span> npm install &amp;&amp; npm run build</div>
+        </div>
       </div>
     </div>
   </section>
@@ -462,10 +474,11 @@
         <h2>Point it at your vault</h2>
         <p>Indexing replaces each note's chunks on re-run, so edits propagate cleanly.</p>
       </div>
-      <div class="code-block"><span class="c"># install &amp; build</span><br>npm install<br>npm run build</div>
+      <div class="code-block"><span class="c"># not on npm: clone the repo, then install &amp; build</span><br>git clone https://github.com/sodrooome/knowledge-engine<br>cd knowledge-engine<br>npm install<br>npm run build</div>
       <div class="code-block"><span class="c"># configure once: set EMBEDDING_API_KEY and LANCEDB_PATH in .env</span><br>cp .env.example .env</div>
       <div class="code-block"><span class="c"># index a vault (skips .obsidian, .trash)</span><br>npm run index -- ~/path/to/vault</div>
       <div class="code-block"><span class="c"># ask it something</span><br>npm run query -- <span class="p">"what do I know about eventual consistency?"</span> 5</div>
+      <p style="margin:16px 0 0;font-family:var(--mono);font-size:13px;">Using Opencode? Agents can query your vault directly: <a href="opencode.html" style="color:var(--purple);text-decoration:none;">integration guide →</a></p>
     </div>
   </section>
 
@@ -485,7 +498,7 @@
         <div class="status-row done"><span class="status-dot"></span><span class="label">Query retriever: cited results by path &amp; heading</span><span class="state">Done</span></div>
         <div class="status-row planned"><span class="status-dot"></span><span class="label">Incremental indexing: skip unchanged notes</span><span class="state">Planned</span></div>
         <div class="status-row planned"><span class="status-dot"></span><span class="label">File watcher</span><span class="state">Planned</span></div>
-        <div class="status-row planned"><span class="status-dot"></span><span class="label">Opencode integration</span><span class="state">Planned</span></div>
+        <div class="status-row partial"><span class="status-dot"></span><span class="label">Opencode integration: search-only MCP tool</span><span class="state">Partial</span></div>
       </div>
       <p style="margin:18px 0 0;font-family:var(--mono);font-size:13px;"><a href="changelog.html" style="color:var(--purple);text-decoration:none;">Full release history →</a></p>
     </div>

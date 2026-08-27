@@ -11,6 +11,15 @@
         "start-mcp-server"
       ],
       "enabled": true
+    },
+    "knowledge-engine": {
+      "type": "local",
+      "command": [
+        "node",
+        "--env-file=/home/maukerja/Dev/knowledge-engine/.env",
+        "/home/maukerja/Dev/knowledge-engine/dist/mcp-server.js"
+      ],
+      "enabled": true
     }
   }
 }
