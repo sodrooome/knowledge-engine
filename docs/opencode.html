@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Changelog · knowledge-engine</title>
-<meta name="description" content="Release history of knowledge-engine: a local semantic search engine over your Obsidian vault. Every notable change, newest first.">
+<title>Opencode integration · knowledge-engine</title>
+<meta name="description" content="Wire knowledge-engine into Opencode: clone the repo, index your vault, register the MCP server, and let agents call search_vault on demand.">
 <meta name="theme-color" content="#F6F5F1">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Changelog · knowledge-engine">
-<meta property="og:description" content="Every notable change to knowledge-engine, newest first.">
+<meta property="og:title" content="Opencode integration · knowledge-engine">
+<meta property="og:description" content="Clone the repo, index your vault, register the MCP server, and agents get a search_vault tool that pulls your notes into context.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' rx='40' fill='%2326215C'/><ellipse cx='85' cy='102' rx='48' ry='40' fill='%233C3489'/><ellipse cx='115' cy='102' rx='48' ry='40' fill='%233C3489'/><circle cx='100' cy='102' r='8' fill='%235DCAA5'/><g fill='%23EEEDFE'><circle cx='135' cy='102' r='5.5'/><circle cx='117.5' cy='71.7' r='5.5'/><circle cx='82.5' cy='71.7' r='5.5'/><circle cx='65' cy='102' r='5.5'/><circle cx='82.5' cy='132.3' r='5.5'/><circle cx='117.5' cy='132.3' r='5.5'/></g></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -77,47 +77,75 @@
     font-weight:600;font-size:clamp(30px,4vw,44px);
     line-height:1.12;letter-spacing:-0.02em;margin:0 0 18px;
   }
-  .page-head p.lede{font-size:17px;color:var(--ink-muted);max-width:560px;margin:0;}
+  .page-head p.lede{font-size:17px;color:var(--ink-muted);max-width:600px;margin:0;}
   .page-head p.lede code{font-family:var(--mono);background:var(--tint);padding:2px 6px;border-radius:4px;font-size:14px;color:var(--purple-deep);}
 
-  /* ---------- releases ---------- */
+  /* ---------- sections ---------- */
   main{padding-bottom:24px;}
-  .release{
-    padding:40px 0 8px;
-    border-top:1px solid var(--border);
-    margin-top:32px;
-  }
-  .release:first-of-type{border-top:none;margin-top:8px;}
-  .release-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin-bottom:8px;}
-  .ver{
-    font-family:var(--mono);font-size:14px;font-weight:600;
+  section.block{padding:36px 0 8px;border-top:1px solid var(--border);margin-top:32px;}
+  section.block:first-of-type{border-top:none;margin-top:8px;}
+  h2{font-size:24px;font-weight:600;letter-spacing:-0.01em;margin:0 0 10px;}
+  .block-lede{color:var(--ink-muted);font-size:15.5px;margin:0 0 26px;max-width:620px;}
+  .block-lede code{
+    font-family:var(--mono);font-size:14px;
     background:var(--tint);color:var(--purple-deep);
-    border-radius:20px;padding:4px 13px;white-space:nowrap;
+    padding:1.5px 6px;border-radius:4px;
   }
-  .ver.unreleased{background:transparent;border:1px dashed var(--ink-faint);color:var(--ink-muted);}
-  .release-date{font-family:var(--mono);font-size:13px;color:var(--ink-faint);}
-  .release-note{color:var(--ink-muted);font-size:15px;margin:0 0 22px;max-width:600px;}
-
-  .group{margin:0 0 26px;}
-  .group-label{
-    font-family:var(--mono);font-size:12px;font-weight:500;
-    text-transform:uppercase;letter-spacing:.06em;
-    margin:0 0 8px;
+  ol.steps{margin:0 0 26px;padding:0;list-style:none;counter-reset:step;}
+  ol.steps>li{
+    counter-increment:step;position:relative;
+    background:var(--surface);border:1px solid var(--border);border-radius:11px;
+    padding:18px 20px 18px 58px;margin-bottom:12px;
   }
-  .group.added .group-label{color:var(--teal);}
-  .group.fixed .group-label{color:#A3542D;}
-  .group.project .group-label,
-  .group.planned .group-label{color:var(--ink-faint);}
-  .group ul{margin:0;padding:0;list-style:none;background:var(--surface);border:1px solid var(--border);border-radius:11px;overflow:hidden;}
-  .group li{font-size:14.5px;padding:12px 18px;border-top:1px solid var(--border);}
-  .group li:first-child{border-top:none;}
-  .group li b{font-weight:500;color:var(--ink);}
-  .group li code{
+  ol.steps>li::before{
+    content:counter(step);position:absolute;left:18px;top:16px;
+    width:26px;height:26px;border-radius:50%;
+    background:var(--tint);color:var(--purple-deep);
+    font-family:var(--mono);font-size:13px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+  }
+  ol.steps h3{font-size:15px;font-weight:600;margin:0 0 6px;}
+  ol.steps p{margin:0 0 10px;font-size:14.5px;color:var(--ink-muted);}
+  ol.steps p:last-child{margin-bottom:0;}
+  ol.steps code{
     font-family:var(--mono);font-size:13px;
     background:var(--tint);color:var(--purple-deep);
     padding:1.5px 6px;border-radius:4px;white-space:nowrap;
   }
-  .group.planned ul{border-style:dashed;background:transparent;}
+  .code-block{
+    background:var(--purple-deep);color:#D9D6F5;border-radius:10px;
+    padding:16px 18px;font-family:var(--mono);font-size:13px;
+    overflow-x:auto;margin:10px 0 0;
+  }
+  .code-block .c{color:#6b678f;}
+  .code-block .dim{color:#8B87A3;}
+  .callout{
+    background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--teal-bright);
+    border-radius:11px;padding:14px 20px;margin:0 0 26px;
+    font-size:14.5px;color:var(--ink-muted);
+  }
+  .callout code{
+    font-family:var(--mono);font-size:13px;
+    background:var(--tint);color:var(--purple-deep);
+    padding:1.5px 6px;border-radius:4px;
+  }
+  .callout.warn{border-left-color:#A3542D;}
+
+  /* ---------- video ---------- */
+  .demo-video{margin:0 0 8px;}
+  .demo-video video{
+    display:block;width:100%;
+    border-radius:14px;border:1px solid var(--border);
+    background:#000;
+  }
+  .video-caption{
+    font-family:var(--mono);font-size:12.5px;color:var(--ink-faint);
+    margin:10px 0 0;
+  }
+  .video-caption code{
+    font-family:var(--mono);background:var(--tint);
+    padding:1.5px 6px;border-radius:4px;font-size:12px;color:var(--purple-deep);
+  }
 
   /* ---------- small screens ---------- */
   /* ---------- mobile menu ---------- */
@@ -153,14 +181,14 @@
     .page-head{padding-top:44px;}
     h1{font-size:28px;}
     .page-head p.lede{font-size:15.5px;}
-    .release{padding:30px 0 4px;}
-    .release-head{gap:10px;}
-    .group li{padding:11px 14px;font-size:14px;}
+    .block-lede{font-size:14.5px;}
+    ol.steps>li{padding:16px 16px 16px 52px;}
+    ol.steps>li::before{left:14px;top:14px;}
     footer{padding:36px 0 48px;}
   }
   /* Long command snippets must be allowed to wrap on the narrowest phones. */
   @media (max-width:480px){
-    .group li code{white-space:normal;}
+    ol.steps code,.code-block{white-space:normal;}
   }
 
   /* ---------- footer ---------- */
@@ -198,8 +226,8 @@
     </a>
     <nav>
       <a href="index.html">Overview</a>
-      <a href="index.html#status">Status</a>
-      <a href="opencode.html">Opencode</a>
+      <a href="changelog.html">Changelog</a>
+      <a href="support.html">Support</a>
       <a class="btn-github" href="https://github.com/sodrooome/knowledge-engine" target="_blank" rel="noopener">View on GitHub</a>
     </nav>
     <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobilePanel">
@@ -212,74 +240,65 @@
 <main>
   <div class="wrap">
     <div class="page-head">
-      <p class="eyebrow">Changelog</p>
-      <h1>Release history</h1>
-      <p class="lede">Every notable change, newest first. Mirrors <code>CHANGELOG.md</code> in the repo; versions are semantic-ish: breaking changes to stored data bump the minor.</p>
+      <p class="eyebrow">Opencode integration</p>
+      <h1>Let your agents read what you've written</h1>
+      <p class="lede">knowledge-engine exposes your vault to Opencode as a <code>search_vault</code> tool. Agents call it on demand and ground their answers in your notes, instead of relying on memory files you update by hand.</p>
     </div>
 
-    <section class="release">
-      <div class="release-head">
-        <span class="ver">v0.1.1</span>
-        <span class="release-date">2026-08-27</span>
+    <div class="demo-video">
+      <video src="assets/demo-screencast.mp4" controls autoplay muted loop playsinline></video>
+      <p class="video-caption">In action: an agent calls <code>search_vault</code> against an indexed vault and grounds its answer in your notes.</p>
+    </div>
+
+    <section class="block">
+      <h2>The only install path: clone the repo</h2>
+      <p class="block-lede">knowledge-engine is not published to a package registry. There is no <code>npm install knowledge-engine</code>; the way to use it is to clone the repository, build it, and point it at your vault.</p>
+    </section>
+
+    <section class="block">
+      <h2>Setup</h2>
+      <p class="block-lede">Four steps, one time. After that the MCP server stays registered and agents can query your vault from any session.</p>
+      <ol class="steps">
+        <li>
+          <h3>Clone and build</h3>
+          <p>Clone the repository and compile the TypeScript. The MCP server runs from the compiled output.</p>
+          <div class="code-block"><span class="c"># git is the only distribution channel</span><br>git clone https://github.com/sodrooome/knowledge-engine.git<br>cd knowledge-engine<br>npm install<br>npm run build</div>
+        </li>
+        <li>
+          <h3>Configure and index your vault</h3>
+          <p>Copy <code>.env.example</code> to <code>.env</code> and set <code>EMBEDDING_API_KEY</code>, <code>LANCEDB_PATH</code> and <code>NODE_ENV</code>. Then index the vault so there is something to search.</p>
+          <div class="code-block"><span class="c"># configure once: EMBEDDING_API_KEY, LANCEDB_PATH, NODE_ENV</span><br>cp .env.example .env<br><br><span class="c"># index a vault (skips .obsidian, .trash)</span><br>npm run index -- ~/path/to/vault</div>
+        </li>
+        <li>
+          <h3>Register the MCP server</h3>
+          <p>Add a <code>knowledge-engine</code> entry to the <code>mcp</code> block of your opencode config. The entry is identical in both scopes; only the file location differs. Replace <code>&lt;repo-path&gt;</code> with the absolute path to the cloned repository.</p>
+          <div class="code-block">"knowledge-engine": {<br>&nbsp;&nbsp;"type": "local",<br>&nbsp;&nbsp;"command": [<br>&nbsp;&nbsp;&nbsp;&nbsp;"node",<br>&nbsp;&nbsp;&nbsp;&nbsp;"--env-file=&lt;repo-path&gt;/.env",<br>&nbsp;&nbsp;&nbsp;&nbsp;"&lt;repo-path&gt;/dist/mcp-server.js"<br>&nbsp;&nbsp;],<br>&nbsp;&nbsp;"enabled": true<br>}</div>
+        </li>
+        <li>
+          <h3>Restart Opencode</h3>
+          <p>Config is loaded once at startup, so quit and restart Opencode for the server to appear.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="block">
+      <h2>Project scope or global scope</h2>
+      <p class="block-lede">You can register the server in <b>either</b> scope, or both (opencode merges configs and duplicate keys are idempotent).</p>
+      <div class="callout">
+        <b>Project scope (recommended default).</b> Add the entry to the cloned repo's <code>opencode.json</code> (next to any other project servers). The tool is then available whenever you work in that project.
       </div>
-      <p class="release-note">Opencode integration, search-only: the retriever is now available to agents as a first-class MCP tool.</p>
-      <div class="group added">
-        <p class="group-label">Added</p>
-        <ul>
-          <li><b>Opencode MCP server</b>: <code>src/mcp-server.ts</code> exposing <code>search_vault(query, k)</code> — embeds with the asymmetric <code>query</code> task, runs cosine top-K (default 5, max 20), and returns ranked citations with the full chunk text so agents can ground answers in your notes</li>
-          <li><b>Lazy cached RAG runtime</b>: the embedding dimension probe and LanceDB table open happen once per server process, not per query</li>
-          <li><b>Project-scoped MCP registration</b>: the <code>knowledge-engine</code> server registered in <code>opencode.json</code>; setup documented for both project and global scope in the README</li>
-          <li><b>Demo screencast</b>: <code>assets/demo-screencast.mp4</code> embedded in the README and the docs Opencode page</li>
-          <li><b>Docs site deployment</b>: a GitHub Pages workflow assembles <code>docs/</code> and <code>assets/</code> into a static site and deploys it to Pages</li>
-          <li><b>Dedicated Opencode guide</b>: <code>docs/opencode.html</code> covering clone-based setup and MCP registration</li>
-        </ul>
-      </div>
-      <div class="group planned">
-        <p class="group-label">Planned</p>
-        <ul>
-          <li><b>Incremental indexing</b>: skip unchanged notes on re-run; the bulk indexer is the skeleton</li>
-          <li><b>File watcher</b>: re-index notes as they change in the vault</li>
-          <li><b>Indexing through MCP</b>: expose an <code>index_vault</code> tool so agents can keep the index fresh</li>
-          <li><b>Native Gemini embedding adapter</b>: fallback if OpenRouter's OpenAI-shaped surface disappoints on retrieval quality (<code>RETRIEVAL_DOCUMENT</code> vs <code>RETRIEVAL_QUERY</code>)</li>
-        </ul>
+      <div class="callout">
+        <b>Global scope.</b> Add the entry to <code>~/.config/opencode/opencode.json</code> instead. The tool is available from <i>every</i> project on the machine, so your personal knowledge base is queryable from any codebase.
       </div>
     </section>
 
-    <section class="release">
-      <div class="release-head">
-        <span class="ver">v0.1.0</span>
-        <span class="release-date">2026-08-23</span>
+    <section class="block">
+      <h2>Using it</h2>
+      <p class="block-lede">There is nothing to invoke manually. In any session with the server registered, just ask a question that your notes might answer, for example <i>"what do I know about eventual consistency?"</i>. The agent calls <code>search_vault</code>, reads the ranked citations, and answers using that context.</p>
+      <div class="callout warn">
+        <b>Index freshness.</b> <code>search_vault</code> only searches what has been indexed. After adding or editing notes, re-run <code>npm run index -- ~/path/to/vault</code> so the tool reflects your latest writing.
       </div>
-      <p class="release-note">First coherent milestone: markdown vault in, cited semantic answers out, end to end via two CLIs.</p>
-
-      <div class="group added">
-        <p class="group-label">Added</p>
-        <ul>
-          <li><b>Heading-aware markdown parser</b>: ATX headings up to 6 levels, fenced-code aware, frontmatter stripped, preamble sections supported</li>
-          <li><b>Section chunker</b>: configurable size and overlap; stable chunk ids from content hashes</li>
-          <li><b>OpenAI-compatible embedding provider</b>: OpenRouter's <code>/api/v1/embeddings</code>; one key covers chat and embeddings; default model <code>google/gemini-embedding-001</code> at 3072 dimensions</li>
-          <li><b>LanceDB vector store</b>: cosine top-K search, batched appends, <code>deleteByDocument</code> for idempotent re-indexing; one table per embedding model so switching models is non-destructive</li>
-          <li><b>Bulk indexer CLI</b>: <code>npm run index -- &lt;vaultPath&gt;</code>; skips dotfolders; re-runs replace each note's chunks so edits propagate cleanly</li>
-          <li><b>Query CLI</b>: <code>npm run query -- "&lt;question&gt;" [k]</code>; prints citations with distance, path, heading and lines</li>
-          <li><b>Shared RAG bootstrap wiring</b>: config → provider → store, used by both CLIs and the smoke harness</li>
-          <li><b>End-to-end smoke harness</b>: embed sample texts, store, run a semantic query</li>
-          <li><b>Fail-fast env configuration</b>: <code>EMBEDDING_API_KEY</code> and <code>LANCEDB_PATH</code> validated at startup</li>
-        </ul>
-      </div>
-
-      <div class="group fixed">
-        <p class="group-label">Fixed</p>
-        <ul>
-          <li>Pinned <code>@lancedb/lancedb</code> to 0.22.3, the last release shipping a native binary for Intel macOS (<code>darwin-x64</code>)</li>
-        </ul>
-      </div>
-
-      <div class="group project">
-        <p class="group-label">Project</p>
-        <ul>
-          <li>Initial commit on 2026-07-14: project setup, parser, chunker, utils, manual tests</li>
-        </ul>
-      </div>
+      <p class="block-lede">Full rationale, design decisions and the upcoming roadmap (indexing through MCP, file watcher) live in <code>planning.md</code> under <i>Decision log, Opencode integration via MCP</i>.</p>
     </section>
   </div>
 </main>
@@ -289,6 +308,8 @@
     <p>Idea and architecture by its author; implementation AI-assisted via Opencode, every change reviewed by hand. Tests are written manually.</p>
     <div class="links">
       <a href="index.html">Overview</a>
+      <a href="changelog.html">Changelog</a>
+      <a href="support.html">Support</a>
       <a href="https://github.com/sodrooome/knowledge-engine" target="_blank" rel="noopener">GitHub</a>
     </div>
   </div>
