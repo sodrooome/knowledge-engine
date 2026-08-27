@@ -96,6 +96,20 @@
     padding:8px;
     margin-bottom:28px;
   }
+  .demo-video{margin:0 0 28px;}
+  .demo-video video{
+    display:block;width:100%;
+    border-radius:14px;border:1px solid var(--border);
+    background:#000;
+  }
+  .video-caption{
+    font-family:var(--mono);font-size:12.5px;color:var(--ink-faint);
+    margin:10px 0 0;
+  }
+  .video-caption code{
+    font-family:var(--mono);background:var(--tint);
+    padding:1.5px 6px;border-radius:4px;font-size:12px;color:var(--purple-deep);
+  }
   .demo-inner{
     display:grid;
     grid-template-columns:1.1fr 1fr;
@@ -224,9 +238,11 @@
   .status-dot{width:9px;height:9px;border-radius:50%;flex:none;}
   .status-row.done .status-dot{background:var(--teal-bright);}
   .status-row.planned .status-dot{background:transparent;border:1.5px solid var(--ink-faint);}
+  .status-row.partial .status-dot{background:var(--purple);}
   .status-row .label{font-size:14.5px;flex:1;}
   .status-row .state{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.04em;}
   .status-row.done .state{color:var(--teal);}
+  .status-row.partial .state{color:var(--purple);}
 
   /* footer */
   footer{padding:44px 0 60px;border-top:1px solid var(--border);}
@@ -378,6 +394,11 @@
         </div>
       </div>
 
+      <div class="demo-video">
+        <video src="../assets/demo-screencast.mp4" controls autoplay muted loop playsinline></video>
+        <p class="video-caption">In action: an agent calls <code>search_vault</code> against an indexed vault and grounds its answer in your notes.</p>
+      </div>
+
       <div class="hero-actions">
         <div class="install-code"><span class="dim">$</span> npm install &amp;&amp; npm run index -- ~/vault</div>
       </div>
@@ -485,7 +506,7 @@
         <div class="status-row done"><span class="status-dot"></span><span class="label">Query retriever: cited results by path &amp; heading</span><span class="state">Done</span></div>
         <div class="status-row planned"><span class="status-dot"></span><span class="label">Incremental indexing: skip unchanged notes</span><span class="state">Planned</span></div>
         <div class="status-row planned"><span class="status-dot"></span><span class="label">File watcher</span><span class="state">Planned</span></div>
-        <div class="status-row planned"><span class="status-dot"></span><span class="label">Opencode integration</span><span class="state">Planned</span></div>
+        <div class="status-row partial"><span class="status-dot"></span><span class="label">Opencode integration: search-only MCP tool</span><span class="state">Partial</span></div>
       </div>
       <p style="margin:18px 0 0;font-family:var(--mono);font-size:13px;"><a href="changelog.html" style="color:var(--purple);text-decoration:none;">Full release history →</a></p>
     </div>

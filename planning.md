@@ -46,6 +46,7 @@ Each part would be a complete, testable component rather than a large block of c
 
 ## Project Structure (Expectation)
 
+```
 knowledge-engine/
 ├── package.json
 ├── tsconfig.json
@@ -72,6 +73,7 @@ knowledge-engine/
 │   │   ├── hash.ts
 │   │   └── frontmatter.ts
 │   └── main.ts
+```
 
 with features such as:
 
@@ -87,6 +89,7 @@ with features such as:
 
 ## Knowledge Graph Architecture
 
+```
                 Obsidian
                   │
                   │ Markdown
@@ -112,6 +115,7 @@ with features such as:
                   │
                   ▼
           Opencode / Claude / GPT
+```
 
 ## Design Question
 

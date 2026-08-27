@@ -74,9 +74,7 @@ server.registerTool(
         .min(1)
         .max(20)
         .optional()
-        .describe(
-          "Number of results to return. Defaults to 5 (max 20).",
-        ),
+        .describe("Number of results to return. Defaults to 5 (max 20)."),
     },
   },
   async ({ query, k }) => {
@@ -91,7 +89,8 @@ server.registerTool(
         content: [
           {
             type: "text" as const,
-            text: "No matches found. The vault may need indexing first " +
+            text:
+              "No matches found. The vault may need indexing first " +
               "(`npm run index -- <vaultPath>`).",
           },
         ],

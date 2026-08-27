@@ -221,12 +221,19 @@
         <span class="ver unreleased">unreleased</span>
         <span class="release-date">in progress</span>
       </div>
+      <div class="group added">
+        <p class="group-label">Added</p>
+        <ul>
+          <li><b>Opencode integration (search-only)</b>: an MCP server exposing <code>search_vault(query, k)</code> so agents can pull notes into context on demand, with no CLI step and no per-query recompilation; lazy cached RAG runtime, full-text citations</li>
+          <li><b>Project-scoped MCP registration</b>: the <code>knowledge-engine</code> server registered in <code>opencode.json</code>; setup documented for both project and global scope</li>
+        </ul>
+      </div>
       <div class="group planned">
         <p class="group-label">Planned</p>
         <ul>
           <li><b>Incremental indexing</b>: skip unchanged notes on re-run; the bulk indexer is the skeleton</li>
           <li><b>File watcher</b>: re-index notes as they change in the vault</li>
-          <li><b>Opencode integration</b>: expose retrieval to agents as a tool</li>
+          <li><b>Indexing through MCP</b>: expose an <code>index_vault</code> tool so agents can keep the index fresh</li>
           <li><b>Native Gemini embedding adapter</b>: fallback if OpenRouter's OpenAI-shaped surface disappoints on retrieval quality (<code>RETRIEVAL_DOCUMENT</code> vs <code>RETRIEVAL_QUERY</code>)</li>
         </ul>
       </div>

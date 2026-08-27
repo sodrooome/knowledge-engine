@@ -136,12 +136,12 @@ npm run query -- "what do I know about eventual consistency?" 5
 ```
 
 Re-running `index` replaces each note's chunks, so edits propagate cleanly.
-The bulk indexer is the skeleton of Part 5; incremental skip-unchanged logic
+The bulk indexer is the skeleton of Part 5: incremental skip-unchanged logic
 lands later (see `planning.md`, _Decision log_).
 
 ## Opencode integration (Part 8, search-only)
 
-<img src="assets/opencode-integration.png" width="600" alt="Opencode calling the search_vault tool via the knowledge-engine MCP server" />
+<video src="assets/demo-screencast.mp4" controls autoplay muted loop playsinline width="75%"></video>
 
 The retriever is exposed to Opencode as a Model Context Protocol (MCP) tool, so
 any agent can pull relevant notes into its context on demand. No CLI, no manual
@@ -159,10 +159,9 @@ vault. Returns ranked citations with source path, section headings, line
 
 There is nothing to invoke manually. In any Opencode session that has the
 server registered, just ask a question that might be answered by notes you have
-written, for example "what do I know about eventual consistency?". The agent
+written, for example _"what do I know about eventual consistency?"_. The agent
 calls `search_vault` automatically, reads the citations, and answers using that
-context. You can nudge it by saying "check my vault for X" or "search your
-knowledge base about Y".
+context. You can nudge it by saying _"check my vault for X"_ or _"search your knowledge base about Y"_.
 
 **Setup (one-time):**
 
@@ -172,7 +171,7 @@ npm run build
 ```
 
 Next, register the server in Opencode's config. The entry is identical in both
-scopes; only the file location differs. Replace `<repo-path>` with the absolute
+scopes: only the file location differs. Replace `<repo-path>` with the absolute
 path to this repository.
 
 ```jsonc
@@ -188,7 +187,7 @@ path to this repository.
 }
 ```
 
-You can register it in **either** scope (or both; opencode merges configs and
+You can register it in **either** scope (or both: opencode merges configs and
 duplicate keys are idempotent):
 
 - **Project scope (recommended default)**: Add the `mcp` block to this repo's
