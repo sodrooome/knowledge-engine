@@ -218,14 +218,17 @@
 
     <section class="release">
       <div class="release-head">
-        <span class="ver unreleased">unreleased</span>
-        <span class="release-date">in progress</span>
+        <span class="ver">v0.1.1</span>
+        <span class="release-date">2026-08-27</span>
       </div>
+      <p class="release-note">Opencode integration, search-only: the retriever is now available to agents as a first-class MCP tool.</p>
       <div class="group added">
         <p class="group-label">Added</p>
         <ul>
-          <li><b>Opencode integration (search-only)</b>: an MCP server exposing <code>search_vault(query, k)</code> so agents can pull notes into context on demand, with no CLI step and no per-query recompilation; lazy cached RAG runtime, full-text citations</li>
-          <li><b>Project-scoped MCP registration</b>: the <code>knowledge-engine</code> server registered in <code>opencode.json</code>; setup documented for both project and global scope</li>
+          <li><b>Opencode MCP server</b>: <code>src/mcp-server.ts</code> exposing <code>search_vault(query, k)</code> — embeds with the asymmetric <code>query</code> task, runs cosine top-K (default 5, max 20), and returns ranked citations with the full chunk text so agents can ground answers in your notes</li>
+          <li><b>Lazy cached RAG runtime</b>: the embedding dimension probe and LanceDB table open happen once per server process, not per query</li>
+          <li><b>Project-scoped MCP registration</b>: the <code>knowledge-engine</code> server registered in <code>opencode.json</code>; setup documented for both project and global scope in the README</li>
+          <li><b>Demo screencast</b>: <code>assets/demo-screencast.mp4</code> embedded in the README and the docs landing page</li>
         </ul>
       </div>
       <div class="group planned">
