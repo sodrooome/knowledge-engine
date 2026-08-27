@@ -13,10 +13,12 @@
     "smoke": "tsc && node --env-file=.env dist/smoke.js",
     "index": "tsc && node --env-file=.env dist/index-cli.js",
     "query": "tsc && node --env-file=.env dist/query-cli.js",
+    "mcp-server": "tsc && node --env-file=.env dist/mcp-server.js",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@lancedb/lancedb": "^0.22.3",
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "apache-arrow": "^18.1.0",
     "yaml": "^2.6.0"
   },

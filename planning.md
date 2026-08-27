@@ -153,3 +153,27 @@ Consequences:
 ### Bulk indexer CLI (Part 5 skeleton)
 
 `npm run index -- <vaultPath>` walks markdown notes (skipping dotfolders), parses, chunks, embeds (`document` task), and replaces each note's rows via delete-by-document + add — idempotent re-runs. `npm run query -- "<q>" [k]` embeds with the asymmetric `query` task and prints citations. Deliberately deferred from Part 5 proper: contentHash skip-unchanged, deleted-file pruning, resume/checkpointing. Note: smoke rows and vault rows share one per-model table; wipe `data/lancedb` before first real indexing if the sample rows are unwanted.
+
+### Opencode integration via MCP (Part 8, search-only)
+
+Part 8 is implemented **search-only** for the MVSB phase: a Model Context Protocol (MCP) server (`src/mcp-server.ts`) exposes the existing retriever to Opencode as a first-class tool, so any agent can pull relevant notes into its context on demand — no CLI, no manual step, no per-query recompilation.
+
+**Why MCP over a slash command or skill:** a command/skill still shells out to the CLI, which today recompiles TypeScript (`tsc && node`) on every invocation and re-pays the runtime bootstrap (embedding dimension probe + opening the LanceDB table) each time. A long-lived MCP stdio server bootstraps lazily once and caches the runtime, so subsequent queries are just embed + top-K search. Registering it globally (`~/.config/opencode/opencode.json`) makes the tool available from every project, matching the "Retriever → Agents → Opencode/LLM" leg of the architecture.
+
+**Tool surface:**
+
+- `search_vault(query: string, k?: number)` — embeds the question with the asymmetric `query` task hint, runs cosine top-K (default 5, max 20) against the per-model table, and returns ranked citations with the full chunk text (not the CLI's 140-char snippet — agents need the actual content to ground answers).
+- Errors are caught and returned as structured tool errors; the server never crashes.
+
+**Deliberately deferred from search-only:**
+
+- `index_vault` tool — indexing stays a manual CLI step for now (MVSB: validate retrieval value before adding surface area). A future `index_vault` tool would reuse the index-CLI logic, which needs extracting into a shared module first.
+- `tsc`-less npm scripts — the `tsc &&` prefix is kept intentionally so edits are always recompiled before the CLI/MCP runs. The trade-off (rebuild on `git pull`/edits) is acceptable and documented in the README.
+
+**Config note:** the MCP server is launched with `node --env-file=/home/maukerja/Dev/knowledge-engine/.env`, so the embedding API key lives only in the project's `.env` (not duplicated into the opencode config). Requires an opencode restart after editing `opencode.json` (config is loaded once at startup).
+
+**Upcoming (beyond search-only):**
+
+1. **Indexing through MCP** — extract the index-CLI pipeline into a shared module and expose `index_vault` so agents can keep the index fresh without a shell step.
+2. **File watcher (Part 6)** — replace manual re-indexing with automatic incremental updates (content-hash skip-unchanged, deleted-file pruning).
+3. **Multi-tool ergonomics** — richer citations (frontmatter, backlinks) and chunk-overlap-aware dedup for agent context packing.

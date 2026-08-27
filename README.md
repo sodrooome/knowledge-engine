@@ -93,6 +93,7 @@ knowledge-engine/
 │   │   ├── hash.ts                         # SHA-256 content hashing
 │   │   ├── frontmatter.ts                  # YAML frontmatter extraction
 │   │   └── index.ts
+│   ├── mcp-server.ts                       # Opencode MCP server (search_vault tool)
 │   └── main.ts                             # Application entry point
 ├── tests/                                  # Manual tests
 ├── planning.md                             # Full roadmap and design decisions
@@ -125,6 +126,7 @@ npm start
 | `npm run smoke`                     | End-to-end check: embed sample texts via OpenRouter, store in LanceDB, run a semantic query |
 | `npm run index -- <vaultPath>`      | Bulk-index a folder of markdown notes into the vector store (idempotent re-runs)            |
 | `npm run query -- "<question>" [k]` | Semantic search over indexed notes; prints citations with distance, path, headings, lines   |
+| `npm run mcp-server`                | Run the Opencode MCP server over stdio (see "Opencode integration" below)                   |
 
 ## Testing with your own vault
 
@@ -136,6 +138,87 @@ npm run query -- "what do I know about eventual consistency?" 5
 Re-running `index` replaces each note's chunks, so edits propagate cleanly.
 The bulk indexer is the skeleton of Part 5; incremental skip-unchanged logic
 lands later (see `planning.md`, _Decision log_).
+
+## Opencode integration (Part 8, search-only)
+
+<img src="assets/opencode-integration.png" width="600" alt="Opencode calling the search_vault tool via the knowledge-engine MCP server" />
+
+The retriever is exposed to Opencode as a Model Context Protocol (MCP) tool, so
+any agent can pull relevant notes into its context on demand. No CLI, no manual
+step, no per-query recompilation. This is the **search-only** half of Part 8
+(the MVSB phase); indexing remains a manual CLI step.
+
+**The tool:**
+
+`search_vault(query: string, k?: number)`. Semantic search over the indexed
+vault. Returns ranked citations with source path, section headings, line
+  range, and the **full text** of each match (not a truncated snippet), so the
+  agent can ground its answer in your own writing. `k` defaults to 5 (max 20).
+
+**How to use it:**
+
+There is nothing to invoke manually. In any Opencode session that has the
+server registered, just ask a question that might be answered by notes you have
+written, for example "what do I know about eventual consistency?". The agent
+calls `search_vault` automatically, reads the citations, and answers using that
+context. You can nudge it by saying "check my vault for X" or "search your
+knowledge base about Y".
+
+**Setup (one-time):**
+
+```bash
+# 1. build once (the MCP server runs from dist/)
+npm run build
+```
+
+Next, register the server in Opencode's config. The entry is identical in both
+scopes; only the file location differs. Replace `<repo-path>` with the absolute
+path to this repository.
+
+```jsonc
+// "mcp": { ... } - add a knowledge-engine entry like so
+"knowledge-engine": {
+  "type": "local",
+  "command": [
+    "node",
+    "--env-file=<repo-path>/.env",
+    "<repo-path>/dist/mcp-server.js"
+  ],
+  "enabled": true
+}
+```
+
+You can register it in **either** scope (or both; opencode merges configs and
+duplicate keys are idempotent):
+
+- **Project scope (recommended default)**: Add the `mcp` block to this repo's
+  `opencode.json` (next to any other project servers). The tool is then
+  available whenever you work in this project. This is the default choice for
+  this repo.
+- **Global scope**: Add it to `~/.config/opencode/opencode.json` so the tool is
+  available from *every* project on this machine. Use this if you want your
+  personal knowledge base queryable from any codebase.
+
+Finally, **restart opencode** (config is loaded once at startup) for the change
+to take effect.
+
+The `--env-file` points at the project `.env`, so the embedding API key lives
+only there. It is not duplicated into the Opencode config.
+
+> [!NOTE]
+> The server bootstraps the RAG runtime **lazily** on the first tool call and
+> caches it for the process lifetime, so the one-time cost (embedding dimension
+> probe + opening the LanceDB table) is paid once instead of on every query.
+> Only stable core APIs are used; run `npm run build` after pulling or editing.
+
+> [!TIP]
+> `search_vault` only searches what has been indexed. After adding or editing
+> notes, re-run `npm run index -- <vaultPath>` so the tool reflects your latest
+> writing.
+
+See `planning.md`, _Decision log, Opencode integration via MCP_, for the full
+rationale, deferred work, and the upcoming plan (indexing through MCP, Part 6
+file watcher).
 
 ## Platform notes
 
@@ -191,7 +274,7 @@ Additional environment variables:
 | 5    | Indexer pipeline                             | Planned                      |
 | 6    | File watcher                                 | Planned                      |
 | 7    | Retriever                                    | Planned                      |
-| 8    | Opencode integration                         | Planned                      |
+| 8    | Opencode integration                         | Partial (search-only MCP)    |
 
 ## Design principles
 
