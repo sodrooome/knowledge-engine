@@ -63,7 +63,7 @@
     text-decoration:none;
     transition:background .15s;
   }
-  .btn-github:hover{background:var(--purple);}
+  .btn-github:hover{background:var(--purple);color:#F6F5F1;}
 
   /* ---------- page head ---------- */
   .page-head{padding:64px 0 12px;}
@@ -152,6 +152,7 @@
   }
   .mobile-panel a:hover{background:var(--tint);color:var(--purple-deep);}
   .mobile-panel a.btn-kofi{background:var(--teal);color:#F6F5F1;margin-top:6px;}
+  .mobile-panel a.btn-kofi:hover{background:var(--teal);color:#F6F5F1;}
   .mobile-panel a.btn-github{background:var(--purple-deep);color:#F6F5F1;margin-top:6px;}
   .mobile-panel a.btn-github:hover{background:var(--purple);color:#F6F5F1;}
   @media (max-width:720px){
@@ -227,7 +228,7 @@
     <div class="page-head">
       <p class="eyebrow">Support</p>
       <h1>Free and open source. Honestly not free to run.</h1>
-      <p class="lede">knowledge-engine is MIT-licensed and charges nothing, ever. There are two ways to help: build it with us, or fund the parts that cost real money.</p>
+      <p class="lede"><b style="color:var(--ink);font-weight:600;">knowledge-engine</b> is available under the MIT license and is free to use. If you would like to support the project, you can help contribute to its development or help cover the out-of-pocket costs that keep it running.</p>
     </div>
 
     <section class="block">
@@ -254,21 +255,20 @@
       <h2>Fund development</h2>
       <p class="block-lede">That said, this project isn't free to <i>build</i>: embedding bills for demos and testing, hardware to keep local models honest, and the hours that go into every reviewed change. If the tool saves you time, a small contribution keeps it moving.</p>
       <div class="fund-box">
-        <p><b>Every bit goes to project costs and development time.</b> No ads, no telemetry, no data collection; funding is the only revenue this project will ever have.</p>
-        <a class="btn-kofi" href="https://ko-fi.com/your-handle" target="_blank" rel="noopener">Buy me a coffee</a>
+        <p>Every contribution goes directly toward the ongoing development and sustainability of this project. It remains completely free of ads, tracking, and data collection, relying entirely on community support to keep moving forward.</p>
+        <a class="btn-kofi" href="https://ko-fi.com/ryanatefoods" target="_blank" rel="noopener">Buy me a coffee</a>
       </div>
-      <p class="fund-note">Supporters don't steer the roadmap; priorities still follow the MVSB loop in the README, in the order it pays for itself.</p>
     </section>
   </div>
 </main>
 
 <footer>
   <div class="wrap">
-    <p>Idea and architecture by its author; implementation AI-assisted via Opencode, every change reviewed by hand. Tests are written manually.</p>
+    <p>The core concept and architecture were designed by the author, with implementation assisted by Opencode. Every line of code is carefully reviewed by hand, and all tests are written manually.</p>
     <div class="links">
       <a href="index.html">Overview</a>
       <a href="changelog.html">Changelog</a>
-      <a href="https://ko-fi.com/your-handle" target="_blank" rel="noopener">Ko-fi</a>
+      <a href="https://ko-fi.com/ryanatefoods" target="_blank" rel="noopener">Ko-fi</a>
     </div>
   </div>
 </footer>
