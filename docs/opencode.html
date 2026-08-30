@@ -308,7 +308,7 @@
       <h2>Using it</h2>
       <p class="block-lede">There is nothing to invoke manually. In any session with the server registered, just ask a question that your notes might answer, for example <i>"what do I know about eventual consistency?"</i>. The agent calls <code>search_vault</code>, reads the ranked citations, and answers using that context.</p>
       <div class="callout warn">
-        <b>Index freshness.</b> <code>search_vault</code> only searches what has been indexed. After adding or editing notes, re-run <code>npm run index -- ~/path/to/vault</code> so the tool reflects your latest writing.
+        <b>Index freshness.</b> <code>search_vault</code> only searches what has been indexed. After adding or editing notes, re-run <code>npm run index -- ~/path/to/vault</code> so the tool reflects your latest writing. An already-running MCP server picks up the re-index automatically — no restart needed.
       </div>
       <p class="block-lede">Full rationale, design decisions and the upcoming roadmap (indexing through MCP, file watcher) live in <code>planning.md</code> under <i>Decision log, Opencode integration via MCP</i>.</p>
     </section>
