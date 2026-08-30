@@ -12,6 +12,22 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 - Indexing through MCP — expose an `index_vault` tool so agents can keep the index fresh
 - Native Gemini embedding adapter fallback (`RETRIEVAL_DOCUMENT` vs `RETRIEVAL_QUERY` task types) if OpenRouter's OpenAI-shaped surface disappoints on retrieval quality
 
+## [0.1.2] - 2026-08-30
+
+Fixes the retrieval-freshness gap identified in a vault search postmortem.
+
+### Fixed
+
+- **LanceDB read consistency** — `createLanceDBVectorStore` now connects with `readConsistencyInterval: 0` (strong consistency), so a long-lived connection (e.g. the Opencode MCP server, cached for the process lifetime) observes rows written or deleted by a separate connection (e.g. `npm run index`) without being reopened or requiring an Opencode restart. Previously a connection stayed pinned to the table version it saw at open time, so a re-index was invisible to an already-running MCP server.
+
+### Added
+
+- Regression coverage: `tests/store/LanceDBVectorStore.integration.test.ts` — asserts a long-lived store handle observes a write, and a delete+add re-index, committed later by a separate handle against the same table.
+
+### Project
+
+- Postmortem: vault search and indexing smoke test (`postmortem-vault-search-indexing.md`) — ad-hoc investigation into why `search_vault` results varied across a session (query-wording sensitivity vs. index/restart timing). Proposed the controlled follow-up tests and the freshness-contract fix that this release implements.
+
 ## [0.1.1] - 2026-08-27
 
 Opencode integration, search-only: the retriever is now available to agents as a first-class MCP tool.

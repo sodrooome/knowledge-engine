@@ -231,6 +231,32 @@
 
     <section class="release">
       <div class="release-head">
+        <span class="ver">v0.1.2</span>
+        <span class="release-date">2026-08-30</span>
+      </div>
+      <p class="release-note">Fixes the retrieval-freshness gap identified in a vault search postmortem.</p>
+      <div class="group fixed">
+        <p class="group-label">Fixed</p>
+        <ul>
+          <li><b>LanceDB read consistency</b>: connections now use <code>readConsistencyInterval: 0</code> (strong consistency), so a long-lived connection (e.g. the Opencode MCP server) observes rows written or deleted by a separate connection (e.g. <code>npm run index</code>) without being reopened or requiring an Opencode restart</li>
+        </ul>
+      </div>
+      <div class="group added">
+        <p class="group-label">Added</p>
+        <ul>
+          <li><b>Regression coverage</b>: <code>tests/store/LanceDBVectorStore.integration.test.ts</code> — asserts a long-lived store handle observes a write, and a delete+add re-index, committed later by a separate handle against the same table</li>
+        </ul>
+      </div>
+      <div class="group project">
+        <p class="group-label">Project</p>
+        <ul>
+          <li>Postmortem: vault search and indexing smoke test — investigation that proposed the freshness-contract fix this release implements</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="release">
+      <div class="release-head">
         <span class="ver">v0.1.1</span>
         <span class="release-date">2026-08-27</span>
       </div>
