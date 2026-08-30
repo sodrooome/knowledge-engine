@@ -12,6 +12,14 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 - Indexing through MCP — expose an `index_vault` tool so agents can keep the index fresh
 - Native Gemini embedding adapter fallback (`RETRIEVAL_DOCUMENT` vs `RETRIEVAL_QUERY` task types) if OpenRouter's OpenAI-shaped surface disappoints on retrieval quality
 
+## [0.1.2] - 2026-08-30
+
+No engine changes. A retrieval-behavior investigation is documented for future work.
+
+### Project
+
+- Postmortem: vault search and indexing smoke test (`postmortem-vault-search-indexing.md`) — ad-hoc investigation into why `search_vault` results varied across a session (query-wording sensitivity vs. index/restart timing). Proposes controlled follow-up tests (restart effect, re-index visibility without a restart, query-wording sensitivity) and codebase recommendations (expose retrieval metadata, define an explicit freshness contract, add an inventory/exhaustive-listing path) for a later release.
+
 ## [0.1.1] - 2026-08-27
 
 Opencode integration, search-only: the retriever is now available to agents as a first-class MCP tool.
