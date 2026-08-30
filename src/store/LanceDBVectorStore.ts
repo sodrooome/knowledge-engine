@@ -77,10 +77,7 @@ function buildSchema(dimensions: number): Schema {
     new Field("text", new Utf8(), false),
     new Field(
       "vector",
-      new FixedSizeList(
-        dimensions,
-        new Field("item", new Float32(), true),
-      ),
+      new FixedSizeList(dimensions, new Field("item", new Float32(), true)),
       false,
     ),
   ]);
@@ -173,7 +170,13 @@ export async function createLanceDBVectorStore(
 ): Promise<LanceDBVectorStore> {
   const { dbPath, tableName = "chunks", dimensions } = options;
 
-  const db = await lancedb.connect(dbPath);
+  // readConsistencyInterval: 0 makes every read check for new commits before
+  // running, so a long-lived connection (e.g. the MCP server) observes rows
+  // written by a separate connection (e.g. `npm run index`) without being
+  // reopened or restarted. Without it, LanceDB pins a connection to the
+  // table version seen at open/last-checkout time (see
+  // postmortem-vault-search-indexing.md).
+  const db = await lancedb.connect(dbPath, { readConsistencyInterval: 0 });
   const names = await db.tableNames();
   const exists = names.includes(tableName);
 
