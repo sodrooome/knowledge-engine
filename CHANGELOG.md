@@ -23,6 +23,7 @@ Fixes the retrieval-freshness gap identified in a vault search postmortem.
 ### Added
 
 - Regression coverage: `tests/store/LanceDBVectorStore.integration.test.ts` — asserts a long-lived store handle observes a write, and a delete+add re-index, committed later by a separate handle against the same table.
+- Published to npm as [`knowledge-engine`](https://www.npmjs.com/package/knowledge-engine) — installable globally for its CLIs (`knowledge-engine-index`, `knowledge-engine-query`, `knowledge-engine-mcp-server`) or as a library (`bootstrapRag` from the package root).
 
 ### Project
 

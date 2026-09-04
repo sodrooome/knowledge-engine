@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Opencode integration — MCP server exposing the vault retriever as a tool.
  *

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Opencode integration · knowledge-engine</title>
-<meta name="description" content="Wire knowledge-engine into Opencode: clone the repo, index your vault, register the MCP server, and let agents call search_vault on demand.">
+<meta name="description" content="Wire knowledge-engine into Opencode: install it (npm or from source), index your vault, register the MCP server, and let agents call search_vault on demand.">
 <meta name="theme-color" content="#F6F5F1">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="knowledge-engine">
@@ -263,8 +263,8 @@
     </div>
 
     <section class="block">
-      <h2>The only install path: clone the repo</h2>
-      <p class="block-lede">At the moment knowledge-engine is designed to be run locally rather than installed through a package registry like npm. To get started, you can clone the repository, build it from source, and point it directly at your local vault.</p>
+      <h2>Two ways to install</h2>
+      <p class="block-lede">Install the CLIs globally from npm, or clone the repo and build from source if you want to read or modify the code. Both end up with the same <code>mcp-server</code> binary; only how you get there differs.</p>
     </section>
 
     <section class="block">
@@ -272,18 +272,24 @@
       <p class="block-lede">Four steps, one time. After that the MCP server stays registered and agents can query your vault from any session.</p>
       <ol class="steps">
         <li>
-          <h3>Clone and build</h3>
-          <p>Clone the repository and compile the TypeScript. The MCP server runs from the compiled output.</p>
-          <div class="code-block"><span class="c"># git is the only distribution channel</span><br>git clone https://github.com/sodrooome/knowledge-engine.git<br>cd knowledge-engine<br>npm install<br>npm run build</div>
+          <h3>Install</h3>
+          <p><b>Option A — npm (recommended):</b></p>
+          <div class="code-block"><span class="c"># installs knowledge-engine-index, -query, -mcp-server</span><br>npm install -g knowledge-engine</div>
+          <p><b>Option B — from source:</b></p>
+          <div class="code-block"><span class="c"># clone, install, compile</span><br>git clone https://github.com/sodrooome/knowledge-engine.git<br>cd knowledge-engine<br>npm install<br>npm run build</div>
         </li>
         <li>
           <h3>Configure and index your vault</h3>
-          <p>Copy <code>.env.example</code> to <code>.env</code> and set <code>EMBEDDING_API_KEY</code>, <code>LANCEDB_PATH</code> and <code>NODE_ENV</code>. Then index the vault so there is something to search.</p>
-          <div class="code-block"><span class="c"># configure once: EMBEDDING_API_KEY, LANCEDB_PATH, NODE_ENV</span><br>cp .env.example .env<br><br><span class="c"># index a vault (skips .obsidian, .trash)</span><br>npm run index -- ~/path/to/vault</div>
+          <p>Set <code>EMBEDDING_API_KEY</code>, <code>LANCEDB_PATH</code> and <code>NODE_ENV</code> — export them directly, or (from source) copy <code>.env.example</code> to <code>.env</code>. Then index the vault so there is something to search.</p>
+          <div class="code-block"><span class="c"># npm install: export the vars yourself</span><br>export EMBEDDING_API_KEY=sk-...<br>export LANCEDB_PATH=~/.knowledge-engine/db<br>export NODE_ENV=production<br><br><span class="c"># index a vault (skips .obsidian, .trash)</span><br>knowledge-engine-index ~/path/to/vault</div>
+          <div class="code-block"><span class="c"># from source: same, via .env + npm scripts</span><br>cp .env.example .env<br>npm run index -- ~/path/to/vault</div>
         </li>
         <li>
           <h3>Register the MCP server</h3>
-          <p>Add a <code>knowledge-engine</code> entry to the <code>mcp</code> block of your opencode config. The entry is identical in both scopes; only the file location differs. Replace <code>&lt;repo-path&gt;</code> with the absolute path to the cloned repository.</p>
+          <p>Add a <code>knowledge-engine</code> entry to the <code>mcp</code> block of your opencode config. The entry is identical in both scopes; only the file location differs.</p>
+          <p><b>npm install</b> — point at the installed binary (find its path with <code>which knowledge-engine-mcp-server</code>) and keep <code>--env-file</code> pointed at wherever you put your <code>.env</code>:</p>
+          <div class="code-block">"knowledge-engine": {<br>&nbsp;&nbsp;"type": "local",<br>&nbsp;&nbsp;"command": [<br>&nbsp;&nbsp;&nbsp;&nbsp;"node",<br>&nbsp;&nbsp;&nbsp;&nbsp;"--env-file=/absolute/path/to/.env",<br>&nbsp;&nbsp;&nbsp;&nbsp;"/absolute/path/to/knowledge-engine-mcp-server"<br>&nbsp;&nbsp;],<br>&nbsp;&nbsp;"enabled": true<br>}</div>
+          <p><b>From source</b> — replace <code>&lt;repo-path&gt;</code> with the absolute path to the cloned repository:</p>
           <div class="code-block">"knowledge-engine": {<br>&nbsp;&nbsp;"type": "local",<br>&nbsp;&nbsp;"command": [<br>&nbsp;&nbsp;&nbsp;&nbsp;"node",<br>&nbsp;&nbsp;&nbsp;&nbsp;"--env-file=&lt;repo-path&gt;/.env",<br>&nbsp;&nbsp;&nbsp;&nbsp;"&lt;repo-path&gt;/dist/mcp-server.js"<br>&nbsp;&nbsp;],<br>&nbsp;&nbsp;"enabled": true<br>}</div>
         </li>
         <li>
@@ -308,7 +314,7 @@
       <h2>Using it</h2>
       <p class="block-lede">There is nothing to invoke manually. In any session with the server registered, just ask a question that your notes might answer, for example <i>"what do I know about eventual consistency?"</i>. The agent calls <code>search_vault</code>, reads the ranked citations, and answers using that context.</p>
       <div class="callout warn">
-        <b>Index freshness.</b> <code>search_vault</code> only searches what has been indexed. After adding or editing notes, re-run <code>npm run index -- ~/path/to/vault</code> so the tool reflects your latest writing. An already-running MCP server picks up the re-index automatically — no restart needed.
+        <b>Index freshness.</b> <code>search_vault</code> only searches what has been indexed. After adding or editing notes, re-run the indexer (<code>knowledge-engine-index ~/path/to/vault</code>, or <code>npm run index -- ~/path/to/vault</code> from source) so the tool reflects your latest writing. An already-running MCP server picks up the re-index automatically — no restart needed.
       </div>
       <p class="block-lede">Full rationale, design decisions and the upcoming roadmap (indexing through MCP, file watcher) live in <code>planning.md</code> under <i>Decision log, Opencode integration via MCP</i>.</p>
     </section>

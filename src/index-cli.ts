@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Bulk-index CLI — the E2E glue between the parser and the vector store.
  *
