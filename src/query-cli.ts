@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Query CLI — search the indexed vault from the command line.
  *

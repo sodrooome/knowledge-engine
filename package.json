@@ -3,6 +3,20 @@
   "version": "0.1.2",
   "description": "Personal knowledge engine with semantic search over Obsidian vaults",
   "type": "module",
+  "main": "dist/wiring.js",
+  "types": "dist/wiring.d.ts",
+  "bin": {
+    "knowledge-engine-index": "dist/index-cli.js",
+    "knowledge-engine-query": "dist/query-cli.js",
+    "knowledge-engine-mcp-server": "dist/mcp-server.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sodrooome/knowledge-engine.git"
+  },
   "engines": {
     "node": ">=20.0.0"
   },

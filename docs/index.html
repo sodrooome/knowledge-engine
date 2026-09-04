@@ -397,11 +397,9 @@
       </div>
 
       <div class="install">
-        <p class="install-note">At the moment, the only way to install is to clone the repository:</p>
+        <p class="install-note">Install it globally:</p>
         <div class="install-code">
-          <div><span class="dim">$</span> git clone https://github.com/sodrooome/knowledge-engine</div>
-          <div><span class="dim">$</span> cd knowledge-engine</div>
-          <div><span class="dim">$</span> npm install &amp;&amp; npm run build</div>
+          <div><span class="dim">$</span> npm install -g knowledge-engine</div>
         </div>
       </div>
     </div>
@@ -485,11 +483,11 @@
         <h2>Point it at your vault</h2>
         <p>Indexing replaces each note's chunks on re-run, so edits propagate cleanly.</p>
       </div>
-      <div class="code-block"><span class="c"># not on npm: clone the repo, then install &amp; build</span><br>git clone https://github.com/sodrooome/knowledge-engine<br>cd knowledge-engine<br>npm install<br>npm run build</div>
-      <div class="code-block"><span class="c"># configure once: set EMBEDDING_API_KEY and LANCEDB_PATH in .env</span><br>cp .env.example .env</div>
-      <div class="code-block"><span class="c"># index a vault (skips .obsidian, .trash)</span><br>npm run index -- ~/path/to/vault</div>
-      <div class="code-block"><span class="c"># ask it something</span><br>npm run query -- <span class="p">"what do I know about eventual consistency?"</span> 5</div>
-      <p style="margin:16px 0 0;font-family:var(--mono);font-size:13px;">Using Opencode? Agents can query your vault directly: <a href="opencode.html" style="color:var(--purple);text-decoration:none;">integration guide →</a></p>
+      <div class="code-block"><span class="c"># install globally</span><br>npm install -g knowledge-engine</div>
+      <div class="code-block"><span class="c"># configure: EMBEDDING_API_KEY, LANCEDB_PATH, NODE_ENV</span><br>export EMBEDDING_API_KEY=sk-...<br>export LANCEDB_PATH=~/.knowledge-engine/db<br>export NODE_ENV=production</div>
+      <div class="code-block"><span class="c"># index a vault (skips .obsidian, .trash)</span><br>knowledge-engine-index ~/path/to/vault</div>
+      <div class="code-block"><span class="c"># ask it something</span><br>knowledge-engine-query <span class="p">"what do I know about eventual consistency?"</span> 5</div>
+      <p style="margin:16px 0 0;font-family:var(--mono);font-size:13px;">Prefer building from source? <a href="https://github.com/sodrooome/knowledge-engine" style="color:var(--purple);text-decoration:none;">clone the repo →</a> · Using Opencode? Agents can query your vault directly: <a href="opencode.html" style="color:var(--purple);text-decoration:none;">integration guide →</a></p>
     </div>
   </section>
 

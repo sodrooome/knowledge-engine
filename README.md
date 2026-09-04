@@ -219,6 +219,64 @@ See `planning.md`, _Decision log, Opencode integration via MCP_, for the full
 rationale, deferred work, and the upcoming plan (indexing through MCP, Part 6
 file watcher).
 
+## Using the published npm package
+
+Everything above assumes you cloned the repo. `knowledge-engine` is also
+[published on npm](https://www.npmjs.com/package/knowledge-engine), so you can
+install it directly instead, either for its CLIs or as a library.
+
+**As global CLIs:**
+
+```bash
+npm install -g knowledge-engine
+```
+
+The installed binaries read config the same way the CLIs above do
+(`loadConfig()`, fail-fast on missing vars — see
+[Configuration](#configuration)), but unlike `npm run index`, they have no
+`--env-file` flag wired in. Export the vars yourself, or run each command
+through a `.env` loader:
+
+```bash
+knowledge-engine-index ~/path/to/vault
+knowledge-engine-query "what do I know about eventual consistency?" 5
+knowledge-engine-mcp-server
+```
+
+To register the installed server with Opencode, point `command` at its
+absolute path (`which knowledge-engine-mcp-server`) and keep `--env-file`
+pointed at your `.env`, same as the [Opencode integration](#opencode-integration-part-8-search-only) example above:
+
+```jsonc
+"knowledge-engine": {
+  "type": "local",
+  "command": [
+    "node",
+    "--env-file=/absolute/path/to/.env",
+    "/absolute/path/to/knowledge-engine-mcp-server"
+  ],
+  "enabled": true
+}
+```
+
+**As a library:**
+
+```bash
+npm install knowledge-engine
+```
+
+```ts
+import { bootstrapRag } from "knowledge-engine";
+
+const { store, provider, dimensions } = await bootstrapRag();
+// store: open LanceDBVectorStore for the resolved per-model table
+// provider: embedding provider — provider.embed(text, task)
+```
+
+`bootstrapRag` runs the same config -> embedding provider -> dimension probe
+-> vector store pipeline the CLIs use, and throws immediately if a required
+env var is missing.
+
 ## Platform notes
 
 > [!WARNING]
